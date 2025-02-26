@@ -1,0 +1,41 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\liluo\\.ohos\\config\\default_ohos_uRZxwjIIY3vAv1zzgsQCYKv5F5s3I0bmprDAZt2fWQI=.cer",
+          "storePassword": "0000001B26E97A35FB2844D5FBDD258E67A24FF8B7DADEBD18FFDEB313466CE1A4576DD9E3FFFDC53A4E3E",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B58613A2E8464E55CB2F8E05F48B3AEE0352CE0D7937D11E7F7AFE85EFD9CD54A2591D628594EB3",
+          "profile": "C:\\Users\\liluo\\.ohos\\config\\default_ohos_uRZxwjIIY3vAv1zzgsQCYKv5F5s3I0bmprDAZt2fWQI=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\liluo\\.ohos\\config\\default_ohos_uRZxwjIIY3vAv1zzgsQCYKv5F5s3I0bmprDAZt2fWQI=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}

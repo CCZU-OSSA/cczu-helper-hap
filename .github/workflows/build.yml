@@ -1,0 +1,139 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - lib/**
+      - .github/workflows/build.yml
+      - native/**
+
+jobs:
+  build:
+    name: ${{ matrix.runner }} (${{ matrix.target }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            target: android
+          - runner: windows-latest
+            target: windows
+          - runner: ubuntu-latest
+            target: linux
+          - runner: macos-latest
+            target: macos
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+
+      - name: Set up JDK 17 (Android)
+        if: matrix.target == 'android'
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: 17
+
+      - name: Set up Protoc (MacOS)
+        if: matrix.target == 'macos'
+        uses: arduino/setup-protoc@v3
+        with:
+          version: "28.2"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Rust & Prepare Complie
+        run: |
+          rustup update stable
+          cargo install rinf
+          rinf message
+          dart fix --apply
+
+      - name: Prepare Build (Android)
+        if: matrix.target == 'android'
+        run: |
+          dart run flutter_native_splash:create
+
+      # Windows
+      - name: Build windows (Windows)
+        if: matrix.target == 'windows'
+        run: flutter build windows --release
+      - name: Upload Artifact (Windows)
+        if: matrix.target == 'windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64
+          path: build/windows/x64/runner/Release/*
+
+      # Android
+      - name: Decode Signing (Android)
+        if: matrix.target == 'android'
+        run: echo $ENCODED_KEYSTORE | base64 -di > android/app/keystore.jks
+        env:
+          ENCODED_KEYSTORE: ${{ secrets.ENCODED_KEYSTORE }}
+
+      - name: Build armAll apk (Android)
+        if: matrix.target == 'android'
+        run: flutter build apk --release
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload ArmALL Artifact (Android)
+        if: matrix.target == 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: armAll
+          path: build/app/outputs/apk/release/*
+
+      - name: Build Split apks (Android)
+        if: matrix.target == 'android'
+        run: flutter build apk --split-per-abi --release
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload Artifact (Android)
+        if: matrix.target == 'android'
+        uses: actions/upload-artifact@v4
+        with:
+          name: apks
+          path: build/app/outputs/apk/release/*
+
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      # Linux
+      - name: Build (Linux)
+        if: matrix.target == 'linux'
+        run: |
+          sudo apt-get install clang cmake git ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+          flutter build linux --release
+
+      - name: Upload Artifact (Linux)
+        if: matrix.target == 'linux'
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-x64
+          path: build/linux/x64/release/bundle/*
+
+      # MacOS
+      - name: Build MacOS (MacOS)
+        if: matrix.target == 'macos'
+        run: |
+          export CSC_IDENTITY_AUTO_DISCOVERY=false
+          flutter build macos --release
+          zip -qq -r -9 build/macos/Build/Products/Release/cczu-helper.app build/macos/Build/Products/Release/cczu_helper.app
+      - name: Upload macOS Artifact (MacOS)
+        if: matrix.target == 'macos'
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos
+          path: build/macos/Build/Products/Release/cczu-helper.app
