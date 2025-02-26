@@ -9,7 +9,6 @@ import 'package:arche/extensions/io.dart';
 import 'package:cczu_helper/controllers/accounts.dart';
 import 'package:cczu_helper/controllers/config.dart';
 import 'package:cczu_helper/controllers/platform.dart';
-import 'package:cczu_helper/controllers/scheduler.dart';
 import 'package:cczu_helper/messages/all.dart';
 import 'package:cczu_helper/models/navstyle.dart';
 import 'package:cczu_helper/models/fields.dart';
@@ -96,10 +95,6 @@ void main() {
             await SystemFonts().loadFont(font);
           }
         }
-      }
-
-      if (Platform.isAndroid) {
-        await Scheduler.init();
       }
 
       logger.info("Run Application in `main`...");
@@ -260,11 +255,6 @@ class MainViewState extends State<MainView> with RefreshMountedStateMixin {
   void initState() {
     super.initState();
     configs = ArcheBus().of();
-    if (configs.notificationsEnable.getOr(false) &&
-        configs.notificationsDay.getOr(true)) {
-      ArcheBus.logger.info("try to `reScheduleAll` Notifications");
-      Scheduler.reScheduleAll();
-    }
 
     platDirectory.then((subdir) {
       var subfile = subdir.subFile("error.log");
@@ -386,46 +376,45 @@ class MainViewState extends State<MainView> with RefreshMountedStateMixin {
             )
           : null,
       body: NavigationView(
-          key: navKey,
-          builder: (context, vertical, horizontal, state) {
-            return NavigationViewState.defaultBuilder(
-                context,
-                () => MediaQuery.removePadding(
-                      removeTop: true,
-                      context: context,
-                      child: vertical(),
-                    ),
-                horizontal,
-                state);
-          },
-          transitionBuilder: (child, animation) {
-            if (configs.weakAnimation.getOr(true)) {
-              return AnimatedSwitcher.defaultTransitionBuilder(
-                  child, animation);
-            }
+        key: navKey,
+        builder: (context, vertical, horizontal, state) {
+          return NavigationViewState.defaultBuilder(
+              context,
+              () => MediaQuery.removePadding(
+                    removeTop: true,
+                    context: context,
+                    child: vertical(),
+                  ),
+              horizontal,
+              state);
+        },
+        transitionBuilder: (child, animation) {
+          if (configs.weakAnimation.getOr(true)) {
+            return AnimatedSwitcher.defaultTransitionBuilder(child, animation);
+          }
 
-            const begin = Offset(1, 0);
-            const end = Offset.zero;
-            final tween = Tween(begin: begin, end: end)
-                .chain(CurveTween(curve: Curves.fastLinearToSlowEaseIn));
-            final offsetAnimation = animation.drive(tween);
-            return SlideTransition(
-              position: offsetAnimation,
-              child: Container(
-                color: theme.scaffoldBackgroundColor,
-                child: child,
-              ),
-            );
-          },
-          backgroundColor: Colors.transparent,
-          showBar: navStyle == NavigationStyle.nav ||
-              navStyle == NavigationStyle.both,
-          direction: isWideScreen(context) ? Axis.horizontal : Axis.vertical,
-          pageViewCurve: Curves.fastLinearToSlowEaseIn,
-          onPageChanged: (value) => setState(() => currentIndex = value),
-          items: viewItems,
-          labelType: NavigationLabelType.selected,
-        ),
-      );
+          const begin = Offset(1, 0);
+          const end = Offset.zero;
+          final tween = Tween(begin: begin, end: end)
+              .chain(CurveTween(curve: Curves.fastLinearToSlowEaseIn));
+          final offsetAnimation = animation.drive(tween);
+          return SlideTransition(
+            position: offsetAnimation,
+            child: Container(
+              color: theme.scaffoldBackgroundColor,
+              child: child,
+            ),
+          );
+        },
+        backgroundColor: Colors.transparent,
+        showBar:
+            navStyle == NavigationStyle.nav || navStyle == NavigationStyle.both,
+        direction: isWideScreen(context) ? Axis.horizontal : Axis.vertical,
+        pageViewCurve: Curves.fastLinearToSlowEaseIn,
+        onPageChanged: (value) => setState(() => currentIndex = value),
+        items: viewItems,
+        labelType: NavigationLabelType.selected,
+      ),
+    );
   }
 }
