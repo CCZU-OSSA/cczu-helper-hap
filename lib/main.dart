@@ -16,7 +16,6 @@ import 'package:cczu_helper/views/pages/calendar.dart';
 import 'package:cczu_helper/views/pages/services.dart';
 import 'package:cczu_helper/views/pages/settings.dart';
 import 'package:cczu_helper/views/pages/tutorial.dart';
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -45,8 +44,11 @@ void main() {
   runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      print("init rust");
       await initializeRust(assignRustSignal);
+      print("init logger");
       var logger = ArcheLogger();
+      logger.addListener(() => print(logger.getLogs().lastOrNull?.message));
       var platUserData = await platUserDataDirectory.getValue();
       // Migrate
       await migrateUserData();
@@ -60,7 +62,7 @@ void main() {
         logger.error(err.stack);
         catchError(logger);
       };
-
+      print("init tz");
       //Calendar
       tz.initializeTimeZones();
       ICalendar.registerField(
@@ -70,6 +72,7 @@ void main() {
           return lastEvent;
         },
       );
+      print("init configs");
 
       var bus = ArcheBus();
       var configs = ApplicationConfigs(config);
@@ -96,6 +99,7 @@ void main() {
           }
         }
       }
+      print("init accounts");
 
       logger.info("Run Application in `main`...");
       logger.info("Try to load `MultiAccountData`");
@@ -106,6 +110,7 @@ void main() {
         logger.warn("Can't find `accounts.json`");
         bus.provide(MultiAccoutData.template);
       }
+      print("run app!");
 
       runApp(
         MainApplication(key: rootKey),
@@ -153,6 +158,7 @@ class MainApplicationState extends State<MainApplication>
   @override
   void initState() {
     super.initState();
+    print("init main state");
     configs = ArcheBus().of();
     _appLifecycleListener = AppLifecycleListener(
       onExitRequested: () async {
@@ -165,49 +171,48 @@ class MainApplicationState extends State<MainApplication>
   @override
   void dispose() {
     _appLifecycleListener.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) => MaterialApp(
-        scaffoldMessengerKey: messagerKey,
-        localizationsDelegates: const [
-          GlobalWidgetsLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale.fromSubtags(languageCode: 'zh'), // generic Chinese 'zh'
-        ],
-        darkTheme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-          ),
-          brightness: Brightness.dark,
-          fontFamily: configs.sysfont.tryGet(),
-          useMaterial3: true,
-          colorScheme: darkDynamic ?? _defaultDarkColorScheme,
-          typography: Typography.material2021(),
+    print("build main app");
+
+    return MaterialApp(
+      scaffoldMessengerKey: messagerKey,
+      localizationsDelegates: const [
+        GlobalWidgetsLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale.fromSubtags(languageCode: 'zh'), // generic Chinese 'zh'
+      ],
+      darkTheme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
         ),
-        theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.transparent,
-            surfaceTintColor: Colors.transparent,
-          ),
-          brightness: Brightness.light,
-          fontFamily: configs.sysfont.tryGet(),
-          useMaterial3: true,
-          colorScheme: lightDynamic ?? _defaultLightColorScheme,
-          typography: Typography.material2021(),
+        brightness: Brightness.dark,
+        fontFamily: configs.sysfont.tryGet(),
+        useMaterial3: true,
+        colorScheme: _defaultDarkColorScheme,
+        typography: Typography.material2021(),
+      ),
+      theme: ThemeData(
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          surfaceTintColor: Colors.transparent,
         ),
-        themeMode: configs.themeMode.getOr(ThemeMode.system),
-        home: MainView(
-          key: viewKey,
-        ),
+        brightness: Brightness.light,
+        fontFamily: configs.sysfont.tryGet(),
+        useMaterial3: true,
+        colorScheme: _defaultLightColorScheme,
+        typography: Typography.material2021(),
+      ),
+      themeMode: configs.themeMode.getOr(ThemeMode.system),
+      home: MainView(
+        key: viewKey,
       ),
     );
   }
@@ -254,6 +259,7 @@ class MainViewState extends State<MainView> with RefreshMountedStateMixin {
   @override
   void initState() {
     super.initState();
+    print("init main view");
     configs = ArcheBus().of();
 
     platDirectory.then((subdir) {
@@ -309,6 +315,8 @@ class MainViewState extends State<MainView> with RefreshMountedStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print("build main view");
+
     var themeMode = configs.themeMode.getOr(ThemeMode.system);
     bool isDark = themeMode == ThemeMode.system
         ? MediaQuery.of(context).platformBrightness == Brightness.dark
@@ -321,6 +329,7 @@ class MainViewState extends State<MainView> with RefreshMountedStateMixin {
     var navStyle = configs.navStyle.getOr(NavigationStyle.both);
     var showTop =
         navStyle == NavigationStyle.top || navStyle == NavigationStyle.both;
+    print("build main view ok");
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
