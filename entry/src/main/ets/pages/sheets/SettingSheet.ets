@@ -63,7 +63,11 @@ export struct SettingSheet{
             }
           }
 
-          ComposeListItem({contentItem:{iconStyle:IconType.SYSTEM_ICON,icon:$r('app.media.setting_global'),primaryText:$r('app.string.SettingLanguage')},operateItem:{icon:{value:this.isShowMoreLanguage?$r('sys.media.ohos_ic_public_arrow_up'):$r('sys.media.ohos_ic_public_arrow_down')}}})
+          ComposeListItem({contentItem:{iconStyle:IconType.SYSTEM_ICON,icon:$r('app.media.setting_global'),primaryText:$r('app.string.SettingLanguage')},operateItem:{icon:{value:this.isShowMoreLanguage?$r('sys.media.ohos_ic_public_arrow_up'):$r('sys.media.ohos_ic_public_arrow_down'),action:()=>{
+            animateTo({curve:Curve.Ease,duration:600},()=>{
+              this.isShowMoreLanguage=!this.isShowMoreLanguage
+            })
+          }}}})
             .onClick(()=>{
               animateTo({curve:Curve.Ease,duration:600},()=>{
                 this.isShowMoreLanguage=!this.isShowMoreLanguage
