@@ -2,13 +2,14 @@ import { ComposeListItem, IconType } from '@ohos.arkui.advanced.ComposeListItem'
 import { CacheSysShareData } from '../appStorageV2/CacheSysShareData';
 import { AppStorageV2, } from '@kit.ArkUI';
 import { SettingSheet } from './sheets/SettingSheet';
+import { aboutUS } from './aboutUs';
 
 @Entry
 @ComponentV2
 struct Index {
 
-  @Local listArray:Array<string>=["课表","服务","设置"]
-  @Local tabArray:Array<string>=["课表","服务"]
+  @Local listArray:Array<string>=["课表","服务","设置","关于我们"]
+  @Local tabArray:Array<string>=["课表","服务","关于我们"]
 
   @Local isShowSideBar:boolean=false
   @Local isShowSettingSheet:boolean=false
@@ -31,6 +32,9 @@ struct Index {
     else if(id==2)
     {
       return $r('app.media.icon_settting')
+    }else if(id==3)
+    {
+      return $r('app.media.moreInfo')
     }
     return
   }
@@ -53,6 +57,7 @@ struct Index {
       //侧边栏
       Stack(){
         Navigation(){
+
           List(){
             ForEach(this.listArray,(item:string,id:number)=>{
               ComposeListItem({contentItem:{iconStyle:IconType.SYSTEM_ICON, icon: this.ChangeListItemIconFun(id) ,primaryText:item}})
@@ -68,8 +73,14 @@ struct Index {
                   if(id==2){
                     this.isShowSettingSheet=true
                   }else{
-                    this.tabsController.changeIndex(id)
-                    this.focusTabId=id
+                    if(id==3){
+                      this.tabsController.changeIndex(2)
+                      this.focusTabId=id
+                    }else{
+                      this.tabsController.changeIndex(id)
+                      this.focusTabId=id
+                    }
+
                   }
                 })
             })
@@ -99,12 +110,12 @@ struct Index {
       Column(){
         Stack(){
           Tabs({barPosition:BarPosition.Start,controller:this.tabsController  }){
-            ForEach(this.tabArray,(item:string)=>{
+            ForEach(this.tabArray,(item:string,index:number)=>{
               TabContent(){
-                Column(){
-                  Text(item)
-                }.height('100%')
-                .width('100%')
+               if(index==2)
+               {
+                  aboutUS()
+               }
               }.padding({ top: px2vp(this.cacheSysShareData.topRectHeight), bottom: px2vp(this.cacheSysShareData.bottomRectHeight) })
             })
           }.backgroundColor($r('sys.color.comp_background_gray'))

@@ -27,6 +27,38 @@
     {
       "name": "SettingPad",
       "value": "平板设置"
+    },
+    {
+      "name": "aboutUS",
+      "value": "关于我们"
+    },
+    {
+      "name": "aboutUSDescriptionAPP",
+      "value": "常大助手是一款为常州大学的学生开发的APP"
+    },
+    {
+      "name": "versionInfoAndFeatures",
+      "value": "版本历史更新"
+    },
+    {
+      "name": "checkForUpdate",
+      "value": "检查更新"
+    },
+    {
+      "name": "gitForThisApp",
+      "value": "软件仓库"
+    },
+    {
+      "name": "QQGroup",
+      "value": "QQ群"
+    },
+    {
+      "name": "tripartiteLibrary",
+      "value": "三方库"
+    },
+    {
+      "name": "Acknowledgment",
+      "value": "鸣谢"
     }
   ]
 }

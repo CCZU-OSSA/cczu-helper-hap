@@ -27,6 +27,38 @@
     {
       "name": "SettingPad",
       "value": "Pad Setting"
+    },
+    {
+      "name": "aboutUS",
+      "value": "About us"
+    },
+    {
+      "name": "aboutUSDescriptionAPP",
+      "value": "CCZU helper is an APP for the students who study at ChangZhouUniversity"
+    },
+    {
+      "name": "versionInfoAndFeatures",
+      "value": "Version Info & Features"
+    },
+    {
+      "name": "checkForUpdate",
+      "value": "Check for update"
+    },
+    {
+      "name": "gitForThisApp",
+      "value": "GitHub of this app"
+    },
+    {
+      "name": "QQGroup",
+      "value": "QQ Group"
+    },
+    {
+      "name": "tripartiteLibrary",
+      "value": "Tripartite library"
+    },
+    {
+      "name": "Acknowledgment",
+      "value": "Acknowledgments"
     }
   ]
 }
