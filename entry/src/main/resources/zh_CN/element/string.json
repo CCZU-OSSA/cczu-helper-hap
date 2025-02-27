@@ -1,0 +1,32 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "常大助手"
+    },
+    {
+      "name": "SettingShow",
+      "value": "显示"
+    },
+    {
+      "name": "SettingDarkMode",
+      "value": "深色模式"
+    },
+    {
+      "name": "SettingLanguage",
+      "value": "语言"
+    },
+    {
+      "name": "SettingPad",
+      "value": "平板设置"
+    }
+  ]
+}

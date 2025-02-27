@@ -1,0 +1,55 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\liluo\\.ohos\\config\\default_CCZU_helper_XEXDmeytG0tWWN10sdClJyD6R8g1aP4zcqCXwscToAc=.cer",
+          "storePassword": "0000001BD5C74CA5C0F401803E00C58F2F173B63509752D6C0DB8E130B512967D0AAB918B54AED6C5D9004",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BAA4E63C7CE008A2DABD58F06257564349EBAFC47E46A0DC1CDB30E7C97A674AAAC6712B0ACE184",
+          "profile": "C:\\Users\\liluo\\.ohos\\config\\default_CCZU_helper_XEXDmeytG0tWWN10sdClJyD6R8g1aP4zcqCXwscToAc=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\liluo\\.ohos\\config\\default_CCZU_helper_XEXDmeytG0tWWN10sdClJyD6R8g1aP4zcqCXwscToAc=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.2(14)",
+        "runtimeOS": "HarmonyOS",
+        "buildOption": {
+          "strictMode": {
+            "caseSensitiveCheck": true,
+            "useNormalizedOHMUrl": true
+          }
+        }
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
