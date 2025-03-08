@@ -3,6 +3,18 @@
     {
       "name": "start_window_background",
       "value": "#FFFFFF"
+    },
+    {
+      "name": "linder_blue",
+      "value": "#6AA7E2"
+    },
+    {
+      "name": "linder_pink",
+      "value": "#F7D7E7"
+    },
+    {
+      "name": "pixelartisan_blue",
+      "value": "#007dff"
     }
   ]
 }

@@ -1,0 +1,34 @@
+{
+  "routerMap": [
+    {
+      "name": "updateHistory",
+      "pageSourceFile": "src/main/ets/pages/updateHistory.ets",
+      "buildFunction": "updateHistoryBuilder"
+    },
+    {
+      "name": "tripartiteLibrary",
+      "pageSourceFile": "src/main/ets/pages/tripartiteLibrary.ets",
+      "buildFunction": "tripartiteLibraryBuilder"
+    },
+    {
+      "name": "acknowledgment",
+      "pageSourceFile": "src/main/ets/pages/acknowledgment.ets",
+      "buildFunction": "acknowledgmentBuilder"
+    },
+    {
+      "name": "cczuWelcomeYou",
+      "pageSourceFile": "src/main/ets/pages/cczuWelcomeYou.ets",
+      "buildFunction": "cczuWelcomeYouBuilder"
+    },
+    {
+      "name": "schoolNativeMap",
+      "pageSourceFile": "src/main/ets/pages/schoolNativeMap.ets",
+      "buildFunction": "schoolNativeMapBuilder"
+    },
+    {
+      "name": "inquiryScore",
+      "pageSourceFile": "src/main/ets/pages/inquiryScore.ets",
+      "buildFunction": "inquiryScoreBuilder"
+    }
+  ]
+}

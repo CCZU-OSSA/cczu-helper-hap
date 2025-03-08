@@ -1,24 +1,32 @@
 import { ComposeListItem, IconType } from '@ohos.arkui.advanced.ComposeListItem'
-import { CacheSysShareData } from '../appStorageV2/CacheSysShareData';
-import { AppStorageV2, } from '@kit.ArkUI';
+import { CacheSysShareData, CacheUIShareData, CacheUserShareData } from '../appStorageV2/CacheShareData';
+import { AppStorageV2, promptAction, } from '@kit.ArkUI';
 import { SettingSheet } from './sheets/SettingSheet';
 import { aboutUS } from './aboutUs';
+import { preferences } from '@kit.ArkData';
+import { common } from '@kit.AbilityKit';
+import { schedule } from './schedule';
+import { service } from './service';
+import { loginSheet } from './sheets/loginSheet';
+import { cczuStu } from '../classes/cczuStu';
 
 @Entry
 @ComponentV2
 struct Index {
-
-  @Local listArray:Array<string>=["课表","服务","设置","关于我们"]
-  @Local tabArray:Array<string>=["课表","服务","关于我们"]
-
-  @Local isShowSideBar:boolean=false
-  @Local isShowSettingSheet:boolean=false
+   context=getContext()
+  @Local listArray:Resource[]=[$r('app.string.schedule'),$r('app.string.service'),$r('app.string.setting'),$r('app.string.aboutUS')]
+  @Local tabArray:Resource[]=[$r('app.string.schedule'),$r('app.string.service'),$r('app.string.aboutUS')]
 
   @Local listItemIcon:ResourceStr|undefined=undefined
   @Local tabsController:TabsController=new TabsController();
   @Local focusTabId:number=0
 
   @Local cacheSysShareData:CacheSysShareData = AppStorageV2.connect(CacheSysShareData,()=>new CacheSysShareData())!
+  @Local cacheUIShareData:CacheUIShareData = AppStorageV2.connect(CacheUIShareData,()=>new CacheUIShareData())!
+  @Local userPreference:preferences.Preferences = preferences.getPreferencesSync(getContext(this) as common.UIAbilityContext, { name: 'userPreference' });
+  @Local cacheUserShareData: CacheUserShareData = AppStorageV2.connect(CacheUserShareData,()=>new CacheUserShareData())!
+
+  @Local isShowSettingSheet:boolean=false
 
   ChangeListItemIconFun(id:number){
     if(id==0)
@@ -34,7 +42,7 @@ struct Index {
       return $r('app.media.icon_settting')
     }else if(id==3)
     {
-      return $r('app.media.moreInfo')
+      return $r("app.media.icon_moreinfo")
     }
     return
   }
@@ -45,18 +53,50 @@ struct Index {
     SettingSheet()
   }
 
+  @Builder
+  loginSheetBuilder()
+  {
+    loginSheet()
+  }
+
   aboutToAppear() {
     if(this.cacheSysShareData.currentBreakpoint=='lg')
     {
-      this.isShowSideBar=true
+      this.cacheUIShareData.showSideBar=true
     }
+    if((this.userPreference.getSync("account","") as string)!=''&& (this.userPreference.getSync("password","") as string )!=''){
+      this.cacheUserShareData.student=new cczuStu(this.userPreference.getSync("account","") as string,this.userPreference.getSync("password","") as string)
+      this.cacheUserShareData.student.loginToEducationalSystem()
+    }
+
   }
+
+
 
   build() {
     SideBarContainer(SideBarContainerType.AUTO) {
       //侧边栏
       Stack(){
         Navigation(){
+
+          Image($r('app.media.cczu_helper_icon')).height('50')
+            .onClick(()=>{
+              if(this.cacheSysShareData.currentBreakpoint=='sm'){
+                animateTo({curve:Curve.Ease,duration:600},()=>{
+                  this.cacheUIShareData.showSideBar=false
+                })
+              }
+              animateTo({curve:Curve.Ease,tempo:2},()=>{
+                this.cacheUIShareData.showLoginSheet=true
+              })
+
+            })
+            .bindSheet($$this.cacheUIShareData.showLoginSheet,this.loginSheetBuilder(), {
+              preferType: SheetType.CENTER,
+              title: { title: $r('app.string.personInfo') },
+              backgroundColor: $r('sys.color.comp_background_gray'),
+              height:600
+            })
 
           List(){
             ForEach(this.listArray,(item:string,id:number)=>{
@@ -66,7 +106,7 @@ struct Index {
 
                   if(this.cacheSysShareData.currentBreakpoint!='lg'){
                     animateTo({curve:Curve.Ease,tempo:2},()=>{
-                      this.isShowSideBar=false
+                      this.cacheUIShareData.showSideBar=false
                     })
                   }
 
@@ -83,26 +123,23 @@ struct Index {
 
                   }
                 })
-            })
+            },(item:string)=>item)
           }.height('100%')
           .width('90%')
         }.height('100%')
         .width('100%')
-        .title("常大助手")
+        .title($r('app.string.EntryAbility_label'))
         .titleMode(NavigationTitleMode.Mini)
         .hideBackButton(true)
         .backgroundColor($r('sys.color.background_tertiary'))
         .padding({ top: px2vp(this.cacheSysShareData.topRectHeight), bottom: px2vp(this.cacheSysShareData.bottomRectHeight) })
         .bindSheet($$this.isShowSettingSheet,this.SettingSheetBuilder(),{
           preferType:SheetType.CENTER,
-          title:{title:'设置'},
-          backgroundColor:$r('sys.color.comp_background_gray')
+          title:{title:$r('app.string.setting')},
+          backgroundColor:$r('sys.color.comp_background_gray'),
+
         })
 
-        if ((this.cacheSysShareData.currentBreakpoint=='lg'&&this.isShowSettingSheet))
-        {
-          Column().height('100%').width('100%').backdropBlur(20)
-        }
 
       }
 
@@ -112,20 +149,23 @@ struct Index {
           Tabs({barPosition:BarPosition.Start,controller:this.tabsController  }){
             ForEach(this.tabArray,(item:string,index:number)=>{
               TabContent(){
-               if(index==2)
+               if(index==0)
+               {
+                 schedule()
+               }
+               else if(index==2)
                {
                   aboutUS()
+               }else{
+                 service()
                }
-              }.padding({ top: px2vp(this.cacheSysShareData.topRectHeight), bottom: px2vp(this.cacheSysShareData.bottomRectHeight) })
+              }.padding({ top: px2vp(this.cacheSysShareData.topRectHeight) })
             })
           }.backgroundColor($r('sys.color.comp_background_gray'))
           .barHeight('0')
           .scrollable(false)
 
-          if ((this.cacheSysShareData.currentBreakpoint=='sm'&&this.isShowSideBar)||this.isShowSettingSheet)
-          {
-            Column().height('100%').width('100%').backdropBlur(20)
-          }
+
         }.height('100%')
         .width('100%')
 
@@ -135,32 +175,16 @@ struct Index {
 
         if(this.cacheSysShareData.currentBreakpoint=='sm'){
           animateTo({curve:Curve.Ease,duration:600},()=>{
-            this.isShowSideBar=false
+            this.cacheUIShareData.showSideBar=false
           })
         }
       })
 
     }.height('100%')
     .width('100%')
-    .showSideBar($$this.isShowSideBar)
-    .showControlButton(false)
+    .showSideBar($$this.cacheUIShareData.showSideBar)
     .maxSideBarWidth(240)
-    .gesture(
-      PanGesture({fingers:1,direction:PanDirection.Right})
-        .onActionEnd(()=>{
-          animateTo({curve:Curve.Ease,duration:600},()=>{
-            this.isShowSideBar=true
-          })
-        })
-    )
-    .gesture(
-      PanGesture({fingers:1,direction:PanDirection.Left})
-        .onActionEnd(()=>{
-          animateTo({curve:Curve.Ease,duration:600},()=>{
-            this.isShowSideBar=false
-          })
-        })
-    )
+    .showControlButton(false)
 
 
   }

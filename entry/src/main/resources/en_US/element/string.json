@@ -10,115 +10,115 @@
     },
     {
       "name": "EntryAbility_label",
-      "value": "常大助手"
+      "value": "CCZU helper"
     },
     {
       "name": "SettingShow",
-      "value": "显示"
+      "value": "Show"
     },
     {
       "name": "SettingDarkMode",
-      "value": "深色模式"
+      "value": "Dark Mode"
     },
     {
       "name": "SettingLanguage",
-      "value": "语言"
+      "value": "Language"
     },
     {
       "name": "SettingPad",
-      "value": "平板设置"
+      "value": "Pad Setting"
     },
     {
       "name": "aboutUS",
-      "value": "关于我们"
+      "value": "About us"
     },
     {
       "name": "aboutUSDescriptionAPP",
-      "value": "常大助手是一款为常州大学的学生开发的APP"
+      "value": "CCZU helper is an APP for the students who study at ChangZhouUniversity"
     },
     {
       "name": "versionInfoAndFeatures",
-      "value": "版本历史更新"
+      "value": "Version Info & Features"
     },
     {
       "name": "checkForUpdate",
-      "value": "检查更新"
+      "value": "Check for update"
     },
     {
       "name": "gitForThisApp",
-      "value": "软件仓库"
+      "value": "GitHub of this app"
     },
     {
       "name": "QQGroup",
-      "value": "QQ群"
+      "value": "QQ Group"
     },
     {
       "name": "tripartiteLibrary",
-      "value": "三方库"
+      "value": "Tripartite library"
     },
     {
       "name": "Acknowledgment",
-      "value": "鸣谢"
+      "value": "Acknowledgments"
     },
     {
       "name": "showSideBarforever",
-      "value": "侧边栏永驻"
+      "value": "Show SideBar forever"
     },
     {
       "name": "amusementSetting",
-      "value": "娱乐设置"
+      "value": "Amusement Setting"
     },
     {
       "name": "timeforfantasy",
-      "value": "幻想时刻"
+      "value": "It's time for fantasy"
     },
     {
       "name": "copy_succeed",
-      "value": "复制成功"
+      "value": "Copy Succeed"
     },
     {
       "name": "schedule",
-      "value": "课表"
+      "value": "Schedule"
     },
     {
       "name": "service",
-      "value": "服务"
+      "value": "Service"
     },
     {
       "name": "setting",
-      "value": "设置"
+      "value": "Setting"
     },
     {
       "name": "simplified_chinese",
-      "value": "简体中文"
+      "value": "Simplified Chinese"
     },
     {
       "name": "english_us",
-      "value": "英语（US）"
+      "value": "English(US)"
     },
     {
       "name": "followSystem",
-      "value": "跟随系统"
+      "value": "Follow System"
     },
     {
       "name": "open",
-      "value": "开启"
+      "value": "Open"
     },
     {
       "name": "close",
-      "value": "关闭"
+      "value": "Close"
     },
     {
       "name": "inputAccount",
-      "value": "请输入账号"
+      "value": "Please input your account"
     },
     {
       "name": "inputPassword",
-      "value": "请输入密码"
+      "value": "Please input your password"
     },
     {
       "name": "personInfo",
-      "value": "个人信息"
+      "value": "Person Infomation"
     }
   ]
 }

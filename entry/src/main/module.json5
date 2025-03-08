@@ -11,6 +11,13 @@
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
+    "routerMap": "$profile:route_map",
+    "metadata": [
+      {
+        "name": "client_id",
+        "value": "6917567033003942892"
+      }
+    ],
     "abilities": [
       {
         "name": "EntryAbility",
@@ -45,6 +52,15 @@
             "resource": "$profile:backup_config"
           }
         ],
+
+      }
+    ],
+    "requestPermissions": [
+      {
+        "name": "ohos.permission.INTERNET",
+        "usedScene": {
+          "when": "always"
+        }
       }
     ]
   }

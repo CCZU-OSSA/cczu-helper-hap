@@ -59,6 +59,66 @@
     {
       "name": "Acknowledgment",
       "value": "鸣谢"
+    },
+    {
+      "name": "showSideBarforever",
+      "value": "侧边栏永驻"
+    },
+    {
+      "name": "amusementSetting",
+      "value": "娱乐设置"
+    },
+    {
+      "name": "timeforfantasy",
+      "value": "幻想时刻"
+    },
+    {
+      "name": "copy_succeed",
+      "value": "复制成功"
+    },
+    {
+      "name": "schedule",
+      "value": "课表"
+    },
+    {
+      "name": "service",
+      "value": "服务"
+    },
+    {
+      "name": "setting",
+      "value": "设置"
+    },
+    {
+      "name": "simplified_chinese",
+      "value": "简体中文"
+    },
+    {
+      "name": "english_us",
+      "value": "英语（US）"
+    },
+    {
+      "name": "followSystem",
+      "value": "跟随系统"
+    },
+    {
+      "name": "open",
+      "value": "开启"
+    },
+    {
+      "name": "close",
+      "value": "关闭"
+    },
+    {
+      "name": "inputAccount",
+      "value": "请输入账号"
+    },
+    {
+      "name": "inputPassword",
+      "value": "请输入密码"
+    },
+    {
+      "name": "personInfo",
+      "value": "个人信息"
     }
   ]
 }

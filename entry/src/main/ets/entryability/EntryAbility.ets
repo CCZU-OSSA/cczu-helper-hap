@@ -1,13 +1,19 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
-import { AppStorageV2, display, window } from '@kit.ArkUI';
+import { AppStorageV2, display, PersistenceV2, window } from '@kit.ArkUI';
 import { BusinessError } from '@kit.BasicServicesKit';
-import { CacheSysShareData } from '../appStorageV2/CacheSysShareData';
+import { CacheSysShareData } from '../appStorageV2/CacheShareData';
+import { preferences } from '@kit.ArkData';
+import { setDarkMode } from '../tools/tool';
+
 
 const DOMAIN = 0x0000;
 
+let userPreference: preferences.Preferences | null = null;
+
 export default class EntryAbility extends UIAbility {
-  private cacheSysShareData:CacheSysShareData = AppStorageV2.connect(CacheSysShareData,()=>new CacheSysShareData())!
+  cacheSysShareData:CacheSysShareData = AppStorageV2.connect(CacheSysShareData,()=>new CacheSysShareData())!
+
   private windowObj?: window.Window
   private curBp: string = ''
   //...
@@ -20,10 +26,10 @@ export default class EntryAbility extends UIAbility {
       let windowWidthVp = windowWidth / display.getDisplayByIdSync(displayId).densityPixels
       let newBp: string = ''
 
-      if (windowWidthVp < 840) {
-        newBp = 'sm'
+      if (windowWidthVp <= 840) {
+        newBp ='sm'
       } else {
-        newBp = 'lg'
+        newBp ='lg'
       }
 
       if (this.curBp !== newBp) {
@@ -37,7 +43,7 @@ export default class EntryAbility extends UIAbility {
   }
 
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
-    this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);
+   /* this.context.getApplicationContext().setColorMode(ConfigurationConstant.ColorMode.COLOR_MODE_NOT_SET);*/
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onCreate');
   }
 
@@ -46,6 +52,8 @@ export default class EntryAbility extends UIAbility {
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
+    userPreference = preferences.getPreferencesSync(this.context, { name: 'userPreference' });
+    setDarkMode(this.context,userPreference.getSync("userPreferDarkMode",2) as number)
 
     //以下为沉浸式
     let windowClass: window.Window = windowStage.getMainWindowSync(); // 获取应用主窗口
@@ -89,6 +97,7 @@ export default class EntryAbility extends UIAbility {
     });
     //上为一多开发检测设备
 
+
     // Main window is created, set main page for this ability
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onWindowStageCreate');
 
@@ -115,4 +124,6 @@ export default class EntryAbility extends UIAbility {
     // Ability has back to background
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onBackground');
   }
+
+
 }
